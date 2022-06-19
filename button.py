@@ -1,7 +1,7 @@
 import pygame
 
 
-# Button class
+# Parent button class
 class Button:
     def __init__(self, x, y, image, scale):
         # Original width/height of image
@@ -39,3 +39,15 @@ class Button:
         surface.blit(self.image, (self.rect.x, self.rect.y))
 
         return action  # True/False
+
+
+# Child cookie button
+class Cookie(Button):
+    def __init__(self, x, y, image, scale, count):  # Taken from parent class + new attributes
+        super().__init__(x, y, image, scale)  # Needed to use from parent class
+
+        self.count = count
+
+    def increasecount(self):
+        # Increases score when clicking on cookie
+        self.count += 1
