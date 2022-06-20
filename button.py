@@ -51,3 +51,15 @@ class Cookie(Button):
     def increasecount(self):
         # Increases score when clicking on cookie
         self.count += 1
+
+
+# Child reset button
+class Reset(Button):
+    def __init__(self, x, y, image, scale, count):  # Taken from parent class + new attributes
+        super().__init__(x, y, image, scale)  # Needed to use from parent class
+
+        self.count = count
+
+    def resetcount(self):
+        # Reset score with click
+        self.count += 1
