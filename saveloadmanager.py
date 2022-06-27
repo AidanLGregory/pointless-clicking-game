@@ -45,3 +45,10 @@ class SaveLoadSystem:
     def save_game_data(self, data_to_save, file_names):
         for index, file in enumerate(data_to_save):
             self.save_data(file, file_names[index])
+
+    # # Delete game data
+    # def delete_game_data(self, file_name):
+    #     if self.check_for_file(file_name):
+    #         print(file_name)
+    #     else:
+    #         print("Nothing to delete")
