@@ -37,12 +37,12 @@ menu_background = button.Button(0, 0, menu_background_img, 1)
 pause_button = button.Button(740, 10, pause_img, 0.75)
 pause_background = button.Button(0, 0, pause_background_img, 1)
 game_background = button.Button(0, 0, game_background_img, 1)
-shop_grandma_button = button.Grandma(100, 190, shop_grandma_img, 1, 0)
-shop_grandma_button_grey = button.Grandma(100, 190, shop_grandma_img_grey, 1, 0)
-shop_bakery_button = button.Bakery(100, 340, shop_bakery_img, 1, 0)
-shop_bakery_button_grey = button.Bakery(100, 340, shop_bakery_img_grey, 1, 0)
-shop_factory_button = button.Factory(100, 490, shop_factory_img, 1, 0)
-shop_factory_button_grey = button.Factory(100, 490, shop_factory_img_grey, 1, 0)
+shop_grandma_button = button.Cookie(100, 190, shop_grandma_img, 1, 0)
+shop_grandma_button_grey = button.Cookie(100, 190, shop_grandma_img_grey, 1, 0)
+shop_bakery_button = button.Cookie(100, 340, shop_bakery_img, 1, 0)
+shop_bakery_button_grey = button.Cookie(100, 340, shop_bakery_img_grey, 1, 0)
+shop_factory_button = button.Cookie(100, 490, shop_factory_img, 1, 0)
+shop_factory_button_grey = button.Cookie(100, 490, shop_factory_img_grey, 1, 0)
 close_button = button.Button(15, 15, close_img, 0.5)
 
 
@@ -52,10 +52,15 @@ score_second_font = pygame.font.SysFont('roboto', 30)  # Cookies/s text
 menu_title_font = pygame.font.SysFont('roboto', 70)  # Menu title
 main_menu_font = pygame.font.SysFont('roboto', 35)  # Menu text
 watermark_font = pygame.font.SysFont('roboto', 25)  # Menu watermark
+shop_item_count_font = pygame.font.SysFont('roboto', 30)  # Shop item count
 
-# Save/Load system
+# Save/Load system - Default = 0 if no save file
 saveloadmanager = SaveLoadSystem(".save", "save_data")
-cookie_button.count = saveloadmanager.load_game_data(["cookies"], [0])  # Load saved cookies if exists, or 0 cookies
+cookie_button.count = saveloadmanager.load_game_data(["cookies"], [0])  # Load saved cookies
+cookie_button.grandma_count = saveloadmanager.load_game_data(["grandmas"], [0])  # Load saved grandmas
+cookie_button.bakery_count = saveloadmanager.load_game_data(["bakeries"], [0])  # Load saved grandmas
+cookie_button.factory_count = saveloadmanager.load_game_data(["factories"], [0])  # Load saved grandmas
+cookie_button.cookies_per_click = saveloadmanager.load_game_data(["cookiesperclick"], [0])  # Load cookies/click
 
 
 # Updating game display
@@ -70,17 +75,21 @@ def draw_window():
         cookie_button.increasecount()
     if reset_button.draw(screen):  # When clicking reset button
         # cookie_button.count = saveloadmanager.delete_game_data("cookies")
-        print("Reset")
+        cookie_button.grandma_count = 0
     if pause_button.draw(screen):
         pause()
 
-    # Showing cookie count / per second / per click
+    # Showing cookie count / per click / shop items count
     current_cookie_text = current_score_font.render("Cookies: " + str(cookie_button.count), True, (255, 255, 255))
-    screen.blit(current_cookie_text, (SCREEN_WIDTH / 50, SCREEN_HEIGHT - 150))
-    cookie_per_second = score_second_font.render("Cookies Per Second: " + str(0), True, (255, 255, 255))
-    screen.blit(cookie_per_second, (SCREEN_WIDTH / 50, SCREEN_HEIGHT - 50))
-    cookie_per_click = score_second_font.render("Cookies Per Click: " + str(0), True, (255, 255, 255))
-    screen.blit(cookie_per_click, (SCREEN_WIDTH / 50, SCREEN_HEIGHT - 75))
+    screen.blit(current_cookie_text, (SCREEN_WIDTH / 50, SCREEN_HEIGHT - 115))
+    cookie_per_click = score_second_font.render("Cookies Per Click: " + str(cookie_button.cookies_per_click), True, (255, 255, 255))
+    screen.blit(cookie_per_click, (SCREEN_WIDTH / 50, SCREEN_HEIGHT - 50))
+    current_grandma_count = shop_item_count_font.render("Grandmas: " + str(cookie_button.grandma_count), True, (255, 255, 255))
+    screen.blit(current_grandma_count, (650, SCREEN_HEIGHT - 115))
+    current_bakery_count = shop_item_count_font.render("Bakeries: " + str(cookie_button.bakery_count), True, (255, 255, 255))
+    screen.blit(current_bakery_count, (650, SCREEN_HEIGHT - 85))
+    current_factory_count = shop_item_count_font.render("Factories: " + str(cookie_button.factory_count), True, (255, 255, 255))
+    screen.blit(current_factory_count, (650, SCREEN_HEIGHT - 55))
 
     pygame.draw.rect(screen, (0, 240, 0), (80, 10, 60, 60))  # Placeholder
     # pygame.draw.rect(screen, (240, 0, 0), (150, 10, 120, 60))  # Placeholder for reset
@@ -118,6 +127,12 @@ if __name__ == "__main__":
             # Proceed events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    # Save current cookie count on exit
+                    saveloadmanager.save_game_data([cookie_button.count], ["cookies"])
+                    saveloadmanager.save_game_data([cookie_button.grandma_count], ["grandmas"])
+                    saveloadmanager.save_game_data([cookie_button.bakery_count], ["bakeries"])
+                    saveloadmanager.save_game_data([cookie_button.factory_count], ["factories"])
+                    saveloadmanager.save_game_data([cookie_button.cookies_per_click], ["cookiesperclick"])
                     pygame.quit()
                     quit()
 
@@ -144,6 +159,10 @@ if __name__ == "__main__":
                 if event.type == pygame.QUIT:
                     # Save current cookie count on exit
                     saveloadmanager.save_game_data([cookie_button.count], ["cookies"])
+                    saveloadmanager.save_game_data([cookie_button.grandma_count], ["grandmas"])
+                    saveloadmanager.save_game_data([cookie_button.bakery_count], ["bakeries"])
+                    saveloadmanager.save_game_data([cookie_button.factory_count], ["factories"])
+                    saveloadmanager.save_game_data([cookie_button.cookies_per_click], ["cookiesperclick"])
                     pygame.quit()
                     quit()
 
@@ -214,12 +233,14 @@ if __name__ == "__main__":
             # Grandma unlocked
             else:
                 if shop_grandma_button.draw(screen):
-                    print("Grandma!")
-                grandma_item_text = main_menu_font.render("Grandma! (2x Cookies per click)", True, (255, 255, 255))
+                    cookie_button.grandma_count += 1
+                    cookie_button.count -= 100
+                    print("Grandma count = " + str(cookie_button.grandma_count))
+                grandma_item_text = main_menu_font.render("Grandma! (2 Cookies per click)", True, (255, 255, 255))
                 screen.blit(grandma_item_text, (SCREEN_WIDTH / 2 - 125, 240))
 
             # Bakery locked
-            if cookie_button.count < 250:
+            if cookie_button.count < 25:
                 if shop_bakery_button_grey.draw(screen):
                     print("NOT ENOUGH COOKIES")
                 bakery_item_text = main_menu_font.render("Bakery! (250 Cookies Required!)", True, (255, 255, 255))
@@ -227,12 +248,14 @@ if __name__ == "__main__":
             # Bakery unlocked
             else:
                 if shop_bakery_button.draw(screen):
-                    print("Bakery!")
-                bakery_item_text = main_menu_font.render("Bakery! (5x Cookies per click)", True, (255, 255, 255))
+                    cookie_button.bakery_count += 1
+                    cookie_button.count -= 250
+                    print("Bakery count = " + str(cookie_button.bakery_count))
+                bakery_item_text = main_menu_font.render("Bakery! (5 Cookies per click)", True, (255, 255, 255))
                 screen.blit(bakery_item_text, (SCREEN_WIDTH / 2 - 125, 400))
 
             # Factory locked
-            if cookie_button.count < 500:
+            if cookie_button.count < 25:
                 if shop_factory_button_grey.draw(screen):
                     print("NOT ENOUGH COOKIES")
                 factory_item_text = main_menu_font.render("Factory! (500 Cookies Required!)", True, (255, 255, 255))
@@ -240,8 +263,10 @@ if __name__ == "__main__":
             # Factory unlocked
             else:
                 if shop_factory_button.draw(screen):
-                    print("Factory!")
-                factory_item_text = main_menu_font.render("Factory! (10x Cookies per click)", True, (255, 255, 255))
+                    cookie_button.factory_count += 1
+                    cookie_button.count -= 500
+                    print("Factory count = " + str(cookie_button.factory_count))
+                factory_item_text = main_menu_font.render("Factory! (10 Cookies per click)", True, (255, 255, 255))
                 screen.blit(factory_item_text, (SCREEN_WIDTH / 2 - 125, 550))
 
             # Close menu button
@@ -252,6 +277,12 @@ if __name__ == "__main__":
             for event in pygame.event.get():
                 # Exit game
                 if event.type == pygame.QUIT:
+                    # Save current cookie count on exit
+                    saveloadmanager.save_game_data([cookie_button.count], ["cookies"])
+                    saveloadmanager.save_game_data([cookie_button.grandma_count], ["grandmas"])
+                    saveloadmanager.save_game_data([cookie_button.bakery_count], ["bakeries"])
+                    saveloadmanager.save_game_data([cookie_button.factory_count], ["factories"])
+                    saveloadmanager.save_game_data([cookie_button.cookies_per_click], ["cookiesperclick"])
                     pygame.quit()
                     quit()
 

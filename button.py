@@ -46,59 +46,38 @@ class Cookie(Button):
     def __init__(self, x, y, image, scale, count):  # Taken from parent class + new attributes
         super().__init__(x, y, image, scale)  # Needed to use from parent class
 
-        # self.count += 10  # 10 cookies per grandma
+        self.cookies_per_click = 1
         self.count = count
 
+        # Grandma
+        self.grandma_count = 0
+        self.cookies_per_grandma = 2  # 2 Cookies per click
+
+        # Bakery
+        self.bakery_count = 0
+        self.cookies_per_bakery = 5  # 5 Cookies per click
+
+        # Factory
+        self.factory_count = 0
+        self.cookies_per_factory = 10  # 10 Cookies per click
 
     def increasecount(self):
         # Increases score when clicking on cookie
-        self.count += 1
+        if self.grandma_count or self.bakery_count or self.factory_count > 0:
+            # Total cookies per click based on current bonuses
+            self.cookies_per_click = (self.bakery_count * self.cookies_per_bakery) + (self.grandma_count * self.cookies_per_grandma) + (self.factory_count * self.cookies_per_factory)
+        else:
+            self.cookies_per_click = 1  # 1 per click if no bonuses
 
+        self.count += self.cookies_per_click
 
 # Child reset button
-class Reset(Button):
-    def __init__(self, x, y, image, scale, count):  # Taken from parent class + new attributes
-        super().__init__(x, y, image, scale)  # Needed to use from parent class
-
-        self.count = count
-
-    def resetcount(self):
-        # Reset score with click
-        self.count += 1
-
-
-# Child cookie button
-class Grandma(Button):
-    def __init__(self, x, y, image, scale, count):  # Taken from parent class + new attributes
-        super().__init__(x, y, image, scale)  # Needed to use from parent class
-
-        self.count = count
-        self.grandma = 10
-
-    def increasecount(self):
-        # Increases score when clicking on cookie
-        self.count += 1
-
-
-# Child cookie button
-class Bakery(Button):
-    def __init__(self, x, y, image, scale, count):  # Taken from parent class + new attributes
-        super().__init__(x, y, image, scale)  # Needed to use from parent class
-
-        self.count = count
-
-    def increasecount(self):
-        # Increases score when clicking on cookie
-        self.count += 1
-
-
-# Child cookie button
-class Factory(Button):
-    def __init__(self, x, y, image, scale, count):  # Taken from parent class + new attributes
-        super().__init__(x, y, image, scale)  # Needed to use from parent class
-
-        self.count = count
-
-    def increasecount(self):
-        # Increases score when clicking on cookie
-        self.count += 1
+# class Reset(Button):
+#     def __init__(self, x, y, image, scale, count):  # Taken from parent class + new attributes
+#         super().__init__(x, y, image, scale)  # Needed to use from parent class
+#
+#         self.count = count
+#
+#     def resetcount(self):
+#         # Reset score with click
+#         self.count += 1
