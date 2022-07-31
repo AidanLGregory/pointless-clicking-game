@@ -240,7 +240,7 @@ if __name__ == "__main__":
                 screen.blit(grandma_item_text, (SCREEN_WIDTH / 2 - 125, 240))
 
             # Bakery locked
-            if cookie_button.count < 25:
+            if cookie_button.count < 250:
                 if shop_bakery_button_grey.draw(screen):
                     print("NOT ENOUGH COOKIES")
                 bakery_item_text = main_menu_font.render("Bakery! (250 Cookies Required!)", True, (255, 255, 255))
@@ -255,7 +255,7 @@ if __name__ == "__main__":
                 screen.blit(bakery_item_text, (SCREEN_WIDTH / 2 - 125, 400))
 
             # Factory locked
-            if cookie_button.count < 25:
+            if cookie_button.count < 500:
                 if shop_factory_button_grey.draw(screen):
                     print("NOT ENOUGH COOKIES")
                 factory_item_text = main_menu_font.render("Factory! (500 Cookies Required!)", True, (255, 255, 255))
